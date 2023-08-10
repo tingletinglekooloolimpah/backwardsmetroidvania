@@ -9,12 +9,13 @@ class_name Player
 @export var swim_velocity_cap : float = 50.0
 var motion = Vector2()
 
+
 #for losing abilities and winning
-var canJump = 1
 var cancanDash = 1
 var canClimb = 1
 var canDoubleJump = 1
-@export var number_of_items = 0
+var canFlip = 1
+var canSwim = 1
 
 #needed for double jump
 var has_double_jumped : bool = false
@@ -23,12 +24,6 @@ var dashDirection = Vector2(1, 0)
 var canDash : bool = false
 var dashing : bool = false
 
-#needed for the grappling hook
-var hook_pos = Vector2()
-var hooked = false
-var rope_length = 500
-var current_rope_length
-
 #For interactions
 @onready var all_interactions = []
 @onready var interactLable = $"Interaction Components/InteractLabel"
@@ -36,37 +31,27 @@ var current_rope_length
 #for swimming
 var is_in_water : bool = false
 
-#spikes
-var has_hit_spike : bool = false
 
-
-
-func gain_ability(ability):
-	if ability  > 1:
-		ability = 0
-	if ability == 1:
-		number_of_items += 1
-	else:
-		number_of_items -= 1
 
   
 func _physics_process(delta):
 	#calls the other functions
 	wall_right()
 	wall_left()
-	queue_redraw()
 	update_interactions()
 	flip_gravity()
 	
 	#should try to make a function for this, but when I did it didn't work. Come back to
-	if canJump > 1:
-		canJump = 0
 	if cancanDash > 1:
 		cancanDash = 0
 	if canClimb > 1:
 		canClimb = 0
 	if canDoubleJump > 1:
 		canDoubleJump = 0
+	if canFlip > 1:
+		canFlip = 0
+	if canSwim > 1:
+		canSwim = 0
 	
 
 	
@@ -84,15 +69,14 @@ func _physics_process(delta):
 				velocity.y = speed * 0.5
 			else:
 				velocity.y = clampf(velocity.y + (gravity * delta * swim_gravity_factor), swim_velocity_cap, swim_velocity_cap)
-	else:
-		has_double_jumped = false
+
 
 	# Jumping code.
 	if Input.is_action_just_pressed("jump"):
-		if is_on_floor() and canJump == 1 and gravity == 1500:
+		if is_on_floor() and gravity > 0:
 			#single jump
 				velocity.y = jump_velocity
-		elif is_on_ceiling() and canJump == 1:
+		elif is_on_ceiling() and gravity < 0: #double jump doesn't work without it for some reason
 			velocity.y = jump_velocity
 		elif (!has_double_jumped) and canDoubleJump == 1:
 			#code for double jump
@@ -102,7 +86,7 @@ func _physics_process(delta):
 	#code for the wall climb	
 	if canClimb == 1:
 		if wall_left() == true or wall_right() == true:
-			velocity.y = 5000 * delta
+			velocity.y = 5000 * delta * gravity/abs(gravity)
 			if wall_left() == true and Input.is_action_pressed("left"):	
 				velocity.x = 1000
 				velocity.y = jump_velocity * 0.4
@@ -127,12 +111,11 @@ func _physics_process(delta):
 	
 	if Input.is_action_just_pressed("dash") and cancanDash == 1:
 		dash()
-	if is_on_floor():
+	if (is_on_floor() and gravity > 0) or (is_on_ceiling() and gravity < 0):
 		canDash = true
 	
-	if cancanDash == 0 and canClimb == 0 and canDoubleJump == 0:
+	if cancanDash == 0 and canClimb == 0 and canDoubleJump == 0 and canFlip == 0 and canSwim == 0:
 		get_tree().change_scene_to_file("res://menus/win_screen.tscn")
-
 	
 	move_and_slide()
 
@@ -154,31 +137,6 @@ func wall_right():
 
 func wall_left():
 	return $LeftWall.is_colliding()
-	
-func draw():
-	var _pos = global_position
-	
-	if hooked: 
-		draw_line(Vector2(0,0), to_local(hook_pos), Color(0.35, 0.7, 0.9), 3, true)#cyan colour
-	else:
-		
-		var colliding = $GrapplingRayCasts.is_colliding()
-		var collide_point = $GrapplingRayCasts.get_collision_point()
-		if colliding and _pos.distance_to(collide_point) < rope_length:
-			draw_line(Vector2(0,0), to_local(collide_point), Color(1,1,1,0.25), 0.5, true)#white colour
-			
-func swing(delta):
-	var radius = global_position - hook_pos
-	if motion.length() < 0.01 or radius.length < 10: return
-	var angle = acos(radius.dot(motion) / (radius.length() * motion.lenght()))
-	var rad_vel = cos(angle) * motion.length()
-	motion += radius.normalized() * -rad_vel
-	
-	if global_position.distance_to(hook_pos) > current_rope_length:
-		global_position = hook_pos + radius.normalized() * current_rope_length
-	
-	motion += (hook_pos - global_position).normalized() * 15000 * delta
-
 
 
 
@@ -207,27 +165,26 @@ func execute_interaction():
 	if all_interactions:
 		var cur_interaction = all_interactions[0]
 		match cur_interaction.interact_type:
-			"jumping" : canJump += 1
 			"dashing" : cancanDash += 1
 			"climbing" : canClimb += 1
 			"doublejumping" : canDoubleJump += 1
+			"swimming" : canSwim += 1
+			"flipping" : canFlip += 1
 
 
 #code for swimming
 func _on_water_detection_2d_water_state_changed(is_in_water : bool):
-	self.is_in_water = is_in_water
-	print(is_in_water)
-	
-func _spike_detection(has_hit_spike : bool):
-	self.has_hit_spike = has_hit_spike
-	print("yo")
-	
+	if canSwim == 1:
+		self.is_in_water = is_in_water
+	else:
+		print("position = spawn_pos")
+
 func flip_gravity():
 	#flip gravity
-	if Input.is_action_just_pressed("flip"):
+	if Input.is_action_just_pressed("flip") and canFlip ==  1:
 		gravity *= -1
-		swim_gravity_factor *= -1
-		jump_velocity *= -1
-		motion *= -1
-		if is_on_ceiling():
+		jump_velocity *= -1 
+	if (is_on_ceiling() and gravity < 0) or (is_on_floor() and gravity > 0):
 			has_double_jumped = false
+	if gravity < 0 and is_on_floor():
+		velocity.y = -jump_velocity * 0.2
