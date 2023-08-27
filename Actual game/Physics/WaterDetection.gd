@@ -4,7 +4,7 @@ signal water_state_changed(is_in_water : bool)
 
 var is_in_water : bool = false;
 
-func _on_body_entered(body):
+func _on_body_entered(_body):
 	if(is_in_water == false):
 		var overlapping_bodies = get_overlapping_bodies() 
 	
@@ -12,7 +12,7 @@ func _on_body_entered(body):
 			is_in_water = true
 			emit_signal("water_state_changed", is_in_water)
 
-func _on_body_exited(body):
+func _on_body_exited(_body):
 	var overlapping_bodies = get_overlapping_bodies() 
 	
 	if(overlapping_bodies.size() == 0):

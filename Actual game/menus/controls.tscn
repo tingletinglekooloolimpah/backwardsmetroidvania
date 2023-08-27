@@ -15,9 +15,12 @@ text = "Interact = e
 Jump = space
 Double jump = space while in the air
 Dash = shift
-Move = wasd 
+Move = ad 
 Climb = hold d if climbing wall to the right 
-			  and a if climbing wall to the left"
+			  and a if climbing wall to the left
+Flip = press e when you have flip if you see
+the words flip
+Morph = press w to stretch and s to squash"
 
 [node name="EscapeButton" type="Button" parent="."]
 layout_mode = 1
