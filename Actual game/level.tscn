@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cc28ywo215wtk"]
+[gd_scene load_steps=16 format=3 uid="uid://cc28ywo215wtk"]
 
 [ext_resource type="PackedScene" uid="uid://c3ddds4qg5top" path="res://player.tscn" id="1_rieri"]
 [ext_resource type="Texture2D" uid="uid://cnb6vef35n3ad" path="res://Art/Legacy-Fantasy - High Forest 2.3/Assets/Tiles.png" id="2_s4h15"]
@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://dg0l0gkbpkwc7" path="res://Art/Legacy-Fantasy - High Forest 2.3/Assets/Hive.png" id="4_ven77"]
 [ext_resource type="PackedScene" uid="uid://budwbke61bupc" path="res://Game components/get_item.tscn" id="5_48f2e"]
 [ext_resource type="Texture2D" uid="uid://daasbgqoaofhj" path="res://Art/warped-files/PNG/environment/layers/walls.png" id="6_8va1g"]
+[ext_resource type="Texture2D" uid="uid://c7lmba1l2yqy0" path="res://Art/warped-files/PNG/environment/layers/background.png" id="8_7uru4"]
+[ext_resource type="Texture2D" uid="uid://cokc8iwygpxm8" path="res://Art/warped-files/PNG/environment/layers/middleground.png" id="9_cl576"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_21i46"]
 texture = ExtResource("2_s4h15")
@@ -5801,6 +5803,7 @@ sources/4 = SubResource("TileSetAtlasSource_1nvwd")
 process_mode = 1
 
 [node name="Player" parent="." instance=ExtResource("1_rieri")]
+modulate = Color(0, 0.717647, 0.941176, 1)
 position = Vector2(-2313, -7453)
 rotation = -0.000613466
 jump_velocity = -500.0
@@ -5889,3 +5892,53 @@ position = Vector2(-2072, -7777)
 interact_label = "Flip"
 interact_type = "change_gravity"
 interact_value = "Yay, another one worked!"
+
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="Background" type="Sprite2D" parent="Node2D"]
+z_index = -405
+position = Vector2(-2566, -7190.88)
+scale = Vector2(4.19167, 3.11222)
+texture = ExtResource("8_7uru4")
+
+[node name="Middleground" type="Sprite2D" parent="Node2D"]
+z_index = -400
+position = Vector2(-2569.5, -7194)
+scale = Vector2(3.73162, 3.10227)
+texture = ExtResource("9_cl576")
+
+[node name="Background2" type="Sprite2D" parent="Node2D"]
+z_index = -405
+position = Vector2(-2047, -7732.88)
+scale = Vector2(4.19167, 3.11222)
+texture = ExtResource("8_7uru4")
+
+[node name="Middleground2" type="Sprite2D" parent="Node2D"]
+z_index = -400
+position = Vector2(-2050.5, -7737)
+scale = Vector2(3.73162, 3.10227)
+texture = ExtResource("9_cl576")
+
+[node name="Background3" type="Sprite2D" parent="Node2D"]
+z_index = -405
+position = Vector2(-2153, -6292.88)
+scale = Vector2(4.19167, 3.11222)
+texture = ExtResource("8_7uru4")
+
+[node name="Middleground3" type="Sprite2D" parent="Node2D"]
+z_index = -400
+position = Vector2(-2148.5, -6297)
+scale = Vector2(3.73162, 3.10227)
+texture = ExtResource("9_cl576")
+
+[node name="Background4" type="Sprite2D" parent="Node2D"]
+z_index = -405
+position = Vector2(-1371, -6281.88)
+scale = Vector2(4.19167, 3.11222)
+texture = ExtResource("8_7uru4")
+
+[node name="Middleground4" type="Sprite2D" parent="Node2D"]
+z_index = -400
+position = Vector2(-1374.5, -6286)
+scale = Vector2(3.73162, 3.10227)
+texture = ExtResource("9_cl576")

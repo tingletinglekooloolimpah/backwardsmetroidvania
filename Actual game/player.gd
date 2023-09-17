@@ -52,8 +52,6 @@ func _physics_process(delta):
 		#should try to make a function for this, but when I did it didn't work. Come back to
 		if canDash > 1:
 			canDash = 0
-		if canClimb > 1:
-			canClimb = 0
 		if canDoubleJump > 1:
 			canDoubleJump = 0
 		if canFlip > 1:
@@ -102,13 +100,13 @@ func _physics_process(delta):
 				velocity.y = 5000 * delta * gravity/abs(gravity)
 				if wall_left() == true and Input.is_action_pressed("left"):	
 					velocity.x = 1000
-					velocity.y = jump_velocity * 0.4
+					velocity.y = jump_velocity * 0.4 #Makes you jump onto the wall
 					has_double_jumped = false
 				if wall_right() == true and Input.is_action_pressed("right"):	
 					velocity.x = -1000
-					velocity.y = jump_velocity * 0.4
+					velocity.y = jump_velocity * 0.4 #Makes you jump onto the wall
 					has_double_jumped = false
-				
+		
 		# Get the input direction and handle the movement/deceleration.
 		var direction = Input.get_axis("left", "right")
 		if direction:
@@ -130,7 +128,35 @@ func _physics_process(delta):
 		if canDash == 0 and canClimb == 0 and canDoubleJump == 0 and canFlip == 0 and canSwim == 0 and canLight == 0 and canMorph == 0:
 			get_tree().change_scene_to_file("res://menus/win_screen.tscn")
 		
-		
+		if canSwim == 0:
+			$Particles/WaterParticles.hide()
+		if canSwim == 1:
+			$Particles/WaterParticles.show()
+		if canDoubleJump == 0:
+			$Particles/DoubleJumpParticles.hide()
+		if canDoubleJump == 1:
+			$Particles/DoubleJumpParticles.show()
+		if canDash == 0:
+			$Particles/DashParticles.hide()
+		if canDash == 1:
+			$Particles/DashParticles.show()
+		if canClimb == 0:
+			$Particles/ClimbParticles.hide()
+		if canClimb == 1:
+			$Particles/ClimbParticles.show()
+		if canFlip == 0:
+			$Particles/FlipParticles.hide()
+		if canFlip == 1:
+			$Particles/FlipParticles.show()
+		if canLight == 0:
+			$Particles/LightParticles.hide()
+		if canLight == 1:
+			$Particles/LightParticles.show()
+		if canMorph == 0:
+			$Particles/MorphParticles.hide()
+		if canMorph == 1:
+			$Particles/MorphParticles.show()
+			
 		move_and_slide()
 
 #code for dash
@@ -197,6 +223,11 @@ func execute_interaction():
 					can_interact = true #make death animation so this doesn't seem so jarringf
 				
 
+func swap_boolean(variable):
+	if variable == true:
+		variable = false
+	if variable  == false:
+		variable = true
 
 #code for swimming
 @warning_ignore("shadowed_variable")
@@ -210,11 +241,11 @@ func _on_water_detection_2d_water_state_changed(is_in_water):
 		await get_tree().create_timer(0.8).timeout 
 		can_interact = true #make death animation so this doesn't seem so jarring
 		
-func flip_gravity():
+func flip_gravity(): #Flips the gravity
 	if (is_on_ceiling() and gravity < 0) or (is_on_floor() and gravity > 0):
-			has_double_jumped = false
+		has_double_jumped = false #MRewritten the doublejumping code so you can doublejump while on the ceiling or on the floor
 	if gravity < 0 and is_on_floor() and (!is_in_water):
-		velocity.y = -jump_velocity * 0.1
+		velocity.y = -jump_velocity * 0.1 #Flips the jump velocity so you jump downwards when on ceiling
 
 func y_direction():
 	if gravity < 0:
@@ -245,3 +276,14 @@ func light():
 		$Lighting.show()
 	else:
 		$Lighting.hide()
+
+
+var my_dict = {}
+var dict_variable_key = "Another key name"
+var dict_variable_value = "2"
+var another_dict = {
+	"Some key name": "1",
+	dict_variable_key: dict_variable_value,
+}
+
+var points_dict = {"White": 50, "Yellow": 75, "Orange": 100}
