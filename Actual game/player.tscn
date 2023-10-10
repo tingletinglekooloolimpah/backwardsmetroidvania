@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c1dklcrqg5dcv" path="res://Art/character_squash.png" id="3_p6as5"]
 [ext_resource type="Texture2D" uid="uid://bffc1adtfts3y" path="res://Art/character_stretch.png" id="4_by2ja"]
 [ext_resource type="Texture2D" uid="uid://dtr6p0lwdw56k" path="res://Art/ui/water.png" id="6_yuunv"]
-[ext_resource type="Texture2D" uid="uid://cf72bogbs0oa5" path="res://Art/ui/doublejump.png" id="7_hjgjy"]
+[ext_resource type="Texture2D" uid="uid://ly1esttthpr7" path="res://Art/ui/doublejump.png" id="7_hjgjy"]
 [ext_resource type="Texture2D" uid="uid://8lmrsdwuf3lb" path="res://Art/icon.svg" id="8_51fom"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_41p7r"]
@@ -77,7 +77,7 @@ script = ExtResource("1_34tk8")
 position = Vector2(0.25, -7.15256e-07)
 scale = Vector2(0.0261719, 0.021875)
 sprite_frames = SubResource("SpriteFrames_41p7r")
-animation = &"stretch"
+animation = &"idle"
 autoplay = "idle"
 
 [node name="NormalCollision2D" type="CollisionShape2D" parent="."]
@@ -138,7 +138,6 @@ vertical_alignment = 1
 texture = SubResource("GradientTexture2D_s8477")
 
 [node name="Particles" type="Node2D" parent="."]
-visible = false
 position = Vector2(-1.66666, -0.833336)
 
 [node name="WaterParticles" type="CPUParticles2D" parent="Particles"]

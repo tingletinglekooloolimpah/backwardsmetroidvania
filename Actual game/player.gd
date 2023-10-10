@@ -11,14 +11,14 @@ var motion = Vector2()
 
 @onready var animated_sprite : AnimatedSprite2D = $AnimatedSprite2D
 
-#for losing abilities and winning
+#these control whether the player has the abilities or not
 var canDash = 1
-var canClimb = 0
+var canClimb = 1
 var canDoubleJump = 1
 var canFlip = 0
 var canSwim = 1
 var canLight = 0
-var canMorph = 0
+var canMorph = 1
 
 #needed for double jump
 var has_double_jumped : bool = false
@@ -49,7 +49,7 @@ func _physics_process(delta):
 		y_direction()
 		light()
 		
-		#should try to make a function for this, but when I did it didn't work. Come back to
+		#should try to make a function for this, but when I did it didn't work.
 		if canDash > 1:
 			canDash = 0
 		if canDoubleJump > 1:
@@ -62,10 +62,12 @@ func _physics_process(delta):
 			canLight = 0
 		if canMorph > 1:
 			canMorph = 0
+		if canClimb > 1:
+			canClimb = 0
 
 		
-		if Input.is_action_just_pressed("interact"): #This allows the code to do contact sensative actions
-			execute_interaction()
+		if Input.is_action_just_pressed("interact"): 
+			execute_interaction()#Allows contact sensative actions
 			
 		# Add the gravity.
 		if not is_on_floor():
@@ -94,7 +96,7 @@ func _physics_process(delta):
 				velocity.y = jump_velocity
 				has_double_jumped = true
 				
-		#code for the wall climb	
+		#code for the wall climb
 		if canClimb == 1 and $StretchCollision2D.disabled == true and $SquashCollision2D.disabled == true and (!is_in_water):
 			if wall_left() == true or wall_right() == true:
 				velocity.y = 5000 * delta * gravity/abs(gravity)
@@ -207,11 +209,11 @@ func execute_interaction():
 		match cur_interaction.interact_type:
 			"dashing" : canDash += 1
 			"climbing" : canClimb += 1
-			"doublejumping" : canDoubleJump += 1
 			"swimming" : canSwim += 1
 			"flipping" : canFlip += 1
 			"lighting" : canLight += 1
 			"morphing" : canMorph += 1
+			"doublejumping" : canDoubleJump += 1
 			"change_gravity" : if canFlip == 1:
 				print(canFlip)
 				gravity *= -1
@@ -276,14 +278,3 @@ func light():
 		$Lighting.show()
 	else:
 		$Lighting.hide()
-
-
-var my_dict = {}
-var dict_variable_key = "Another key name"
-var dict_variable_value = "2"
-var another_dict = {
-	"Some key name": "1",
-	dict_variable_key: dict_variable_value,
-}
-
-var points_dict = {"White": 50, "Yellow": 75, "Orange": 100}
