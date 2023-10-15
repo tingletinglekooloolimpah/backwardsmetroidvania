@@ -15,7 +15,7 @@ var motion = Vector2()
 var canDash = 1
 var canClimb = 1
 var canDoubleJump = 1
-var canFlip = 0
+var canFlip = 1
 var canSwim = 1
 var canLight = 0
 var canMorph = 1
@@ -88,8 +88,8 @@ func _physics_process(delta):
 		if Input.is_action_just_pressed("jump"):
 			if is_on_floor() and gravity > 0:
 				#single jump
-					velocity.y = jump_velocity
-			elif is_on_ceiling() and gravity < 0: #double jump doesn't work without it for some reason
+				velocity.y = jump_velocity
+			elif is_on_ceiling() and gravity < 0: #allows player to jump on ceiling
 				velocity.y = jump_velocity
 			elif (!has_double_jumped) and canDoubleJump == 1:
 				#code for double jump
@@ -97,18 +97,25 @@ func _physics_process(delta):
 				has_double_jumped = true
 				
 		#code for the wall climb
-		if canClimb == 1 and $StretchCollision2D.disabled == true and $SquashCollision2D.disabled == true and (!is_in_water):
-			if wall_left() == true or wall_right() == true:
-				velocity.y = 5000 * delta * gravity/abs(gravity)
-				if wall_left() == true and Input.is_action_pressed("left"):	
-					velocity.x = 1000
-					velocity.y = jump_velocity * 0.4 #Makes you jump onto the wall
-					has_double_jumped = false
-				if wall_right() == true and Input.is_action_pressed("right"):	
-					velocity.x = -1000
-					velocity.y = jump_velocity * 0.4 #Makes you jump onto the wall
-					has_double_jumped = false
-		
+		if canClimb == 1 and $StretchCollision2D.disabled == true:
+			if $SquashCollision2D.disabled == true and (!is_in_water):
+				if wall_left() == true or wall_right() == true:
+					velocity.y = 5000 * delta * gravity/abs(gravity)
+					if wall_left() == true and Input.is_action_pressed("left"):	
+						velocity.x = 1000
+						velocity.y = jump_velocity * 0.4 #Makes you jump onto the wall
+						has_double_jumped = false
+					if wall_right() == true and Input.is_action_pressed("right"):	
+						velocity.x = -1000
+						velocity.y = jump_velocity * 0.4 #Makes you jump onto the wall
+						has_double_jumped = false
+
+		if is_in_water and (Input.is_action_pressed("jump") or Input.is_action_pressed("down")):
+			$StretchCollision2D.disabled = true
+			$SquashCollision2D.disabled = true
+			animated_sprite.play("idle")
+
+
 		# Get the input direction and handle the movement/deceleration.
 		var direction = Input.get_axis("left", "right")
 		if direction:
@@ -220,9 +227,9 @@ func execute_interaction():
 				jump_velocity *= -1
 				swim_velocity_cap *= -1
 				if (!is_on_ceiling() and (!is_on_floor())):
-					can_interact = false 
+					can_interact = true 
 				else:
-					can_interact = true #make death animation so this doesn't seem so jarringf
+					can_interact = true #make death animation so this doesn't seem so jarring
 				
 
 func swap_boolean(variable):
@@ -232,7 +239,6 @@ func swap_boolean(variable):
 		variable = true
 
 #code for swimming
-@warning_ignore("shadowed_variable")
 func _on_water_detection_2d_water_state_changed(is_in_water):
 	if canSwim == 1:
 		self.is_in_water = is_in_water
@@ -245,7 +251,7 @@ func _on_water_detection_2d_water_state_changed(is_in_water):
 		
 func flip_gravity(): #Flips the gravity
 	if (is_on_ceiling() and gravity < 0) or (is_on_floor() and gravity > 0):
-		has_double_jumped = false #MRewritten the doublejumping code so you can doublejump while on the ceiling or on the floor
+		has_double_jumped = false #MRewritten the doublejump code so you can doublejump while on the ceiling or on the floor
 	if gravity < 0 and is_on_floor() and (!is_in_water):
 		velocity.y = -jump_velocity * 0.1 #Flips the jump velocity so you jump downwards when on ceiling
 

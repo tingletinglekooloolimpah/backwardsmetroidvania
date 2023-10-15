@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://Physics/WaterDetection.gd" id="1_ciu7d"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6cdbi"]
+size = Vector2(14, 14)
 
 [node name="WaterDetection" type="Area2D"]
 collision_layer = 0

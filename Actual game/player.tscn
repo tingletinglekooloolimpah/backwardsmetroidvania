@@ -81,17 +81,21 @@ animation = &"idle"
 autoplay = "idle"
 
 [node name="NormalCollision2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(0.5, 0)
 shape = SubResource("RectangleShape2D_2m2xk")
 
 [node name="SquashCollision2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(-1, 1)
 shape = SubResource("RectangleShape2D_oyif7")
 
 [node name="StretchCollision2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("RectangleShape2D_r4tjr")
 
 [node name="Walls" type="Node2D" parent="."]
+visible = false
 
 [node name="LeftWall" type="RayCast2D" parent="Walls"]
 rotation = 3.14159
@@ -103,6 +107,7 @@ target_position = Vector2(16, 0)
 collision_mask = 9
 
 [node name="Interaction Components" type="Node2D" parent="."]
+visible = false
 z_index = 1
 
 [node name="InteractionArea" type="Area2D" parent="Interaction Components"]
@@ -135,12 +140,15 @@ vertical_alignment = 1
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="Lighting" type="PointLight2D" parent="."]
+visible = false
 texture = SubResource("GradientTexture2D_s8477")
 
 [node name="Particles" type="Node2D" parent="."]
+visible = false
 position = Vector2(-1.66666, -0.833336)
 
 [node name="WaterParticles" type="CPUParticles2D" parent="Particles"]
+visible = false
 texture = ExtResource("6_yuunv")
 emission_shape = 3
 emission_rect_extents = Vector2(1, 1)
@@ -158,6 +166,7 @@ hue_variation_min = -1.0
 hue_variation_max = 1.0
 
 [node name="DoubleJumpParticles" type="CPUParticles2D" parent="Particles"]
+visible = false
 texture = ExtResource("7_hjgjy")
 emission_shape = 3
 emission_rect_extents = Vector2(1, 1)
@@ -175,6 +184,7 @@ hue_variation_min = -1.0
 hue_variation_max = 1.0
 
 [node name="DashParticles" type="CPUParticles2D" parent="Particles"]
+visible = false
 texture = ExtResource("8_51fom")
 emission_shape = 3
 emission_rect_extents = Vector2(1, 1)
@@ -192,6 +202,7 @@ hue_variation_min = -1.0
 hue_variation_max = 1.0
 
 [node name="MorphParticles" type="CPUParticles2D" parent="Particles"]
+visible = false
 texture = ExtResource("2_sfl6x")
 direction = Vector2(10, -10)
 spread = 67.39
@@ -208,6 +219,7 @@ hue_variation_min = -1.0
 hue_variation_max = 1.0
 
 [node name="FlipParticles" type="CPUParticles2D" parent="Particles"]
+visible = false
 texture = ExtResource("3_p6as5")
 emission_shape = 1
 emission_sphere_radius = 1.0
@@ -225,6 +237,7 @@ hue_variation_min = -1.0
 hue_variation_max = 1.0
 
 [node name="LightParticles" type="CPUParticles2D" parent="Particles"]
+visible = false
 emission_shape = 1
 emission_sphere_radius = 8.0
 direction = Vector2(10, -10)
@@ -242,6 +255,7 @@ hue_variation_min = -1.0
 hue_variation_max = 1.0
 
 [node name="ClimbParticles" type="CPUParticles2D" parent="Particles"]
+visible = false
 texture = ExtResource("4_by2ja")
 emission_shape = 1
 emission_sphere_radius = 128.0
