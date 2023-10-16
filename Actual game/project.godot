@@ -18,7 +18,7 @@ config/icon="res://Art/icon.svg"
 [display]
 
 window/per_pixel_transparency/allowed=true
-window/stretch/scale=2.2
+window/stretch/scale=3.0
 
 [input]
 
@@ -106,4 +106,4 @@ flip={
 
 [rendering]
 
-environment/defaults/default_clear_color=Color(0.85098, 0.745098, 0.545098, 1)
+environment/defaults/default_clear_color=Color(0.0196078, 0.745098, 0.545098, 1)
