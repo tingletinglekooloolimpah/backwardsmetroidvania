@@ -117,8 +117,7 @@ func _physics_process(delta):
 				velocity.y += 100 #value that felt best for more testers
 				
 		#code for the wall climb
-		if canClimb == 1 and $StretchCollision2D.disabled == true:
-			if $SquashCollision2D.disabled == true and (!is_in_water):
+		if canClimb == 1 and $StretchCollision2D.disabled == true and (!is_in_water):
 				if wall_left() == true or wall_right() == true:
 					velocity.y = 5000 * delta * gravity/abs(gravity)
 					if wall_left() == true and Input.is_action_pressed("left"):	
@@ -132,7 +131,6 @@ func _physics_process(delta):
 
 		if is_in_water and (Input.is_action_pressed("jump") or Input.is_action_pressed("down")):
 			$StretchCollision2D.disabled = true
-			$SquashCollision2D.disabled = true
 			animated_sprite.play("idle")
 
 
@@ -255,18 +253,11 @@ func y_direction():
 		
 func squash_and_stretch():
 	if (!is_in_water):
-		if Input.is_action_pressed("down") and canMorph == 1:
-			$SquashCollision2D.disabled = false
-			$NormalCollision2D.disabled = true
-			$StretchCollision2D.disabled = true
-			animated_sprite.play("squash")
-		elif Input.is_action_pressed("up") and canMorph == 1:
-			$SquashCollision2D.disabled = true
+		if Input.is_action_pressed("up") and canMorph == 1:
 			$NormalCollision2D.disabled = true
 			$StretchCollision2D.disabled = false
 			animated_sprite.play("stretch")
 		else:
-			$SquashCollision2D.disabled = true
 			$NormalCollision2D.disabled = false 
 			$StretchCollision2D.disabled = true
 			animated_sprite.play("idle")

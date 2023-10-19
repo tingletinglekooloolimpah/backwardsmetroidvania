@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c3ddds4qg5top"]
+[gd_scene load_steps=11 format=3 uid="uid://c3ddds4qg5top"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_34tk8"]
 [ext_resource type="Texture2D" uid="uid://ta6jyg7ytm24" path="res://Art/character.png" id="2_sfl6x"]
@@ -26,9 +26,6 @@ animations = [{
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2m2xk"]
 size = Vector2(15, 18)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_oyif7"]
-size = Vector2(31, 10)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r4tjr"]
 size = Vector2(8, 28)
@@ -63,11 +60,6 @@ autoplay = "idle"
 visible = false
 position = Vector2(0.5, 0)
 shape = SubResource("RectangleShape2D_2m2xk")
-
-[node name="SquashCollision2D" type="CollisionShape2D" parent="."]
-visible = false
-position = Vector2(-1, 1)
-shape = SubResource("RectangleShape2D_oyif7")
 
 [node name="StretchCollision2D" type="CollisionShape2D" parent="."]
 visible = false

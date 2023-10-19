@@ -7,7 +7,7 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func process(delta):
 	
 	#Plays the audio, and if it stops for some reason, it will start again
 	if $Sleepless.playing == false:
