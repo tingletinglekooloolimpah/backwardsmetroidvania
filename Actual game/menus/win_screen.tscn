@@ -41,4 +41,25 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "Return to menu"
 
+[node name="MusicCredits" type="Label" parent="."]
+layout_mode = 0
+offset_left = 669.0
+offset_top = 522.0
+offset_right = 1151.0
+offset_bottom = 652.0
+text = "Music- Sleepless by Purrple Cat | https://purrplecat.com/
+Music promoted by https://www.chosic.com/free-music/all/
+Creative Commons CC BY-SA 3.0
+https://creativecommons.org/licenses/by-sa/3.0/
+ "
+
+[node name="Credits" type="Label" parent="."]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 593.0
+offset_right = 239.0
+offset_bottom = 645.0
+text = "Game by Qudbug
+Art by Ansimuz - warped caves"
+
 [connection signal="pressed" from="ReturnButton" to="." method="_on_button_pressed"]

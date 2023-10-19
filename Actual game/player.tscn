@@ -1,13 +1,9 @@
-[gd_scene load_steps=18 format=3 uid="uid://c3ddds4qg5top"]
+[gd_scene load_steps=12 format=3 uid="uid://c3ddds4qg5top"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_34tk8"]
 [ext_resource type="Texture2D" uid="uid://ta6jyg7ytm24" path="res://Art/character.png" id="2_sfl6x"]
 [ext_resource type="PackedScene" uid="uid://cx4kog32xwdju" path="res://Physics/water_detection_2d.tscn" id="3_k7s22"]
-[ext_resource type="Texture2D" uid="uid://c1dklcrqg5dcv" path="res://Art/character_squash.png" id="3_p6as5"]
 [ext_resource type="Texture2D" uid="uid://bffc1adtfts3y" path="res://Art/character_stretch.png" id="4_by2ja"]
-[ext_resource type="Texture2D" uid="uid://dtr6p0lwdw56k" path="res://Art/ui/water.png" id="6_yuunv"]
-[ext_resource type="Texture2D" uid="uid://ly1esttthpr7" path="res://Art/ui/doublejump.png" id="7_hjgjy"]
-[ext_resource type="Texture2D" uid="uid://8lmrsdwuf3lb" path="res://Art/icon.svg" id="8_51fom"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_41p7r"]
 animations = [{
@@ -17,14 +13,6 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle",
-"speed": 10.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("3_p6as5")
-}],
-"loop": true,
-"name": &"squash",
 "speed": 10.0
 }, {
 "frames": [{
@@ -57,15 +45,6 @@ gradient = SubResource("Gradient_1swp4")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.965812)
-
-[sub_resource type="Curve" id="Curve_rqqma"]
-max_value = 2.0
-_data = [Vector2(0, 2), 0.0, 0.0, 0, 0, Vector2(0.275862, 0), 0.0, 0.0, 0, 0, Vector2(0.495074, 2), 0.0, 0.0, 0, 0, Vector2(0.751231, 0), 0.0, 0.0, 0, 0, Vector2(1, 2), 0.0, 0.0, 0, 0]
-point_count = 5
-
-[sub_resource type="Gradient" id="Gradient_enl3c"]
-interpolation_mode = 2
-offsets = PackedFloat32Array(0.213333, 0.794667)
 
 [node name="Player" type="CharacterBody2D"]
 top_level = true
@@ -136,133 +115,14 @@ vertical_alignment = 1
 
 [node name="WaterDetection2D" parent="." instance=ExtResource("3_k7s22")]
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="PlayerCamera" type="Camera2D" parent="."]
 
 [node name="Lighting" type="PointLight2D" parent="."]
 visible = false
 texture = SubResource("GradientTexture2D_s8477")
 
-[node name="Particles" type="Node2D" parent="."]
-position = Vector2(-1.66666, -0.833336)
-
-[node name="WaterParticles" type="CPUParticles2D" parent="Particles"]
-texture = ExtResource("6_yuunv")
-emission_shape = 3
-emission_rect_extents = Vector2(1, 1)
-direction = Vector2(10, -10)
-spread = 67.39
-gravity = Vector2(0, 0)
-initial_velocity_min = 1.0
-initial_velocity_max = 200.0
-angle_min = -720.0
-angle_max = 720.0
-scale_amount_min = 0.01
-scale_amount_max = 0.01
-scale_amount_curve = SubResource("Curve_rqqma")
-hue_variation_min = -1.0
-hue_variation_max = 1.0
-
-[node name="DoubleJumpParticles" type="CPUParticles2D" parent="Particles"]
-texture = ExtResource("7_hjgjy")
-emission_shape = 3
-emission_rect_extents = Vector2(1, 1)
-direction = Vector2(10, -10)
-spread = 67.39
-gravity = Vector2(0, 0)
-initial_velocity_min = 1.0
-initial_velocity_max = 200.0
-angle_min = -720.0
-angle_max = 720.0
-scale_amount_min = 0.01
-scale_amount_max = 0.01
-scale_amount_curve = SubResource("Curve_rqqma")
-hue_variation_min = -1.0
-hue_variation_max = 1.0
-
-[node name="DashParticles" type="CPUParticles2D" parent="Particles"]
-texture = ExtResource("8_51fom")
-emission_shape = 3
-emission_rect_extents = Vector2(1, 1)
-direction = Vector2(10, -10)
-spread = 67.39
-gravity = Vector2(0, 0)
-initial_velocity_min = 1.0
-initial_velocity_max = 200.0
-angle_min = -720.0
-angle_max = 720.0
-scale_amount_min = 0.01
-scale_amount_max = 0.1
-scale_amount_curve = SubResource("Curve_rqqma")
-hue_variation_min = -1.0
-hue_variation_max = 1.0
-
-[node name="MorphParticles" type="CPUParticles2D" parent="Particles"]
-texture = ExtResource("2_sfl6x")
-direction = Vector2(10, -10)
-spread = 67.39
-gravity = Vector2(0, 0)
-initial_velocity_min = 1.0
-initial_velocity_max = 200.0
-angle_min = -720.0
-angle_max = 720.0
-scale_amount_min = 0.01
-scale_amount_max = 0.01
-scale_amount_curve = SubResource("Curve_rqqma")
-color = Color(1, 0, 1, 1)
-hue_variation_min = -1.0
-hue_variation_max = 1.0
-
-[node name="FlipParticles" type="CPUParticles2D" parent="Particles"]
-texture = ExtResource("3_p6as5")
-emission_shape = 1
-emission_sphere_radius = 1.0
-direction = Vector2(10, -10)
-spread = 67.39
-gravity = Vector2(0, 0)
-initial_velocity_min = 1.0
-initial_velocity_max = 200.0
-angle_min = -720.0
-angle_max = 720.0
-scale_amount_min = 0.01
-scale_amount_max = 0.02
-color = Color(0.509804, 0, 0.0313726, 1)
-hue_variation_min = -1.0
-hue_variation_max = 1.0
-
-[node name="LightParticles" type="CPUParticles2D" parent="Particles"]
-emission_shape = 1
-emission_sphere_radius = 8.0
-direction = Vector2(10, -10)
-spread = 67.39
-gravity = Vector2(0, 0)
-initial_velocity_min = 1.0
-initial_velocity_max = 200.0
-angle_min = -720.0
-angle_max = 720.0
-scale_amount_min = 0.01
-scale_amount_max = 0.01
-scale_amount_curve = SubResource("Curve_rqqma")
-color_ramp = SubResource("Gradient_enl3c")
-hue_variation_min = -1.0
-hue_variation_max = 1.0
-
-[node name="ClimbParticles" type="CPUParticles2D" parent="Particles"]
-texture = ExtResource("4_by2ja")
-emission_shape = 1
-emission_sphere_radius = 128.0
-direction = Vector2(10, -10)
-spread = 67.39
-gravity = Vector2(0, 0)
-initial_velocity_min = 1.0
-initial_velocity_max = 200.0
-angle_min = -720.0
-angle_max = 720.0
-scale_amount_min = 0.01
-scale_amount_max = 0.01
-scale_amount_curve = SubResource("Curve_rqqma")
-color = Color(1, 0.980392, 0, 1)
-hue_variation_min = -1.0
-hue_variation_max = 1.0
+[node name="PauseCamera" type="Camera2D" parent="."]
+position = Vector2(29255.8, 7601.67)
 
 [connection signal="area_entered" from="Interaction Components/InteractionArea" to="." method="_on_interaction_area_area_entered"]
 [connection signal="area_exited" from="Interaction Components/InteractionArea" to="." method="_on_interaction_area_area_exited"]

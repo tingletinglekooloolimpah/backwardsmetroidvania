@@ -1,11 +1,23 @@
-[gd_scene load_steps=2 format=3 uid="uid://178v53c5wi2u"]
+[gd_scene load_steps=2 format=3 uid="uid://ctqw1aeeuo65a"]
 
-[ext_resource type="Script" path="res://menus/controls.gd" id="1_ykkcd"]
+[sub_resource type="GDScript" id="GDScript_ntfto"]
+script/source = "extends Control
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	$EscapeButton.grab_focus()
+
+
+
+func _on_escape_pressed():
+	get_tree().change_scene_to_file(\"res://menus/menu.tscn\")
+"
 
 [node name="Controls" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-script = ExtResource("1_ykkcd")
+script = SubResource("GDScript_ntfto")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 0
@@ -20,7 +32,7 @@ Climb = hold d if climbing wall to the right
 			  and a if climbing wall to the left
 Flip = press e when you have flip if you see
 the words flip
-Morph = press w to stretch and s to squash"
+Morph = press w to stretch "
 
 [node name="EscapeButton" type="Button" parent="."]
 layout_mode = 1

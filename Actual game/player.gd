@@ -1,12 +1,18 @@
 extends CharacterBody2D
 class_name Player
 
-
+#physics variables
 @export var speed : float = 300.0
 @export var jump_velocity : float = -400.0
 @export var gravity : float = 1500
 @export var swim_gravity_factor : float = 0.25
 @export var swim_velocity_cap : float = 50.0
+#double jump, jump buffer and cayote time variables
+@export var jump_counter : int = 0
+@export var jump_buffer_time : float = 15.0
+@export var jump_buffer_counter : int = 0
+@export var cayote_time: float = 15.0
+@export var cayote_counter : int = 0
 var motion = Vector2()
 
 @onready var animated_sprite : AnimatedSprite2D = $AnimatedSprite2D
@@ -20,8 +26,7 @@ var canSwim = 1
 var canLight = 0
 var canMorph = 1
 
-#needed for double jump
-var has_double_jumped : bool = false
+
 #Variables for dashing
 var dashDirection = Vector2(1, 0)
 var dashPossible : bool = false
@@ -48,6 +53,7 @@ func _physics_process(delta):
 		squash_and_stretch()
 		y_direction()
 		light()
+		pause()
 		
 		#should try to make a function for this, but when I did it didn't work.
 		if canDash > 1:
@@ -64,11 +70,22 @@ func _physics_process(delta):
 			canMorph = 0
 		if canClimb > 1:
 			canClimb = 0
+			
 
-		
 		if Input.is_action_just_pressed("interact"): 
 			execute_interaction()#Allows contact sensative actions
+		
+		if (gravity > 0 and is_on_floor()) or (gravity < 0 and is_on_ceiling()): 
+			cayote_counter = cayote_time
+			jump_counter = 0
 			
+		if (gravity > 0 and (!is_on_floor())) or (gravity < 0 and (!is_on_ceiling())):
+			if cayote_counter > 0:
+				cayote_counter -= 1
+			if jump_buffer_counter > 0 and jump_counter < 1:
+				cayote_counter = 1
+				jump_counter += 1
+				
 		# Add the gravity.
 		if not is_on_floor():
 			if(!is_in_water):
@@ -86,15 +103,18 @@ func _physics_process(delta):
 
 		# Jumping code.
 		if Input.is_action_just_pressed("jump"):
-			if is_on_floor() and gravity > 0:
-				#single jump
-				velocity.y = jump_velocity
-			elif is_on_ceiling() and gravity < 0: #allows player to jump on ceiling
-				velocity.y = jump_velocity
-			elif (!has_double_jumped) and canDoubleJump == 1:
-				#code for double jump
-				velocity.y = jump_velocity
-				has_double_jumped = true
+			jump_buffer_counter = jump_buffer_time
+		if jump_buffer_counter > 0:
+			jump_buffer_counter -= 1
+		if jump_buffer_counter > 0 and cayote_counter > 0:
+			#single jump
+			velocity.y = jump_velocity
+			jump_buffer_counter = 0
+			cayote_counter = 0
+			
+		if Input.is_action_just_released("jump"): # variable jump height
+			if velocity.y < 0:
+				velocity.y += 100 #value that felt best for more testers
 				
 		#code for the wall climb
 		if canClimb == 1 and $StretchCollision2D.disabled == true:
@@ -104,11 +124,11 @@ func _physics_process(delta):
 					if wall_left() == true and Input.is_action_pressed("left"):	
 						velocity.x = 1000
 						velocity.y = jump_velocity * 0.4 #Makes you jump onto the wall
-						has_double_jumped = false
+						jump_counter = 0
 					if wall_right() == true and Input.is_action_pressed("right"):	
 						velocity.x = -1000
 						velocity.y = jump_velocity * 0.4 #Makes you jump onto the wall
-						has_double_jumped = false
+						jump_counter = 0
 
 		if is_in_water and (Input.is_action_pressed("jump") or Input.is_action_pressed("down")):
 			$StretchCollision2D.disabled = true
@@ -137,34 +157,6 @@ func _physics_process(delta):
 		if canDash == 0 and canClimb == 0 and canDoubleJump == 0 and canFlip == 0 and canSwim == 0 and canLight == 0 and canMorph == 0:
 			get_tree().change_scene_to_file("res://menus/win_screen.tscn")
 		
-		if canSwim == 0:
-			$Particles/WaterParticles.hide()
-		if canSwim == 1:
-			$Particles/WaterParticles.show()
-		if canDoubleJump == 0:
-			$Particles/DoubleJumpParticles.hide()
-		if canDoubleJump == 1:
-			$Particles/DoubleJumpParticles.show()
-		if canDash == 0:
-			$Particles/DashParticles.hide()
-		if canDash == 1:
-			$Particles/DashParticles.show()
-		if canClimb == 0:
-			$Particles/ClimbParticles.hide()
-		if canClimb == 1:
-			$Particles/ClimbParticles.show()
-		if canFlip == 0:
-			$Particles/FlipParticles.hide()
-		if canFlip == 1:
-			$Particles/FlipParticles.show()
-		if canLight == 0:
-			$Particles/LightParticles.hide()
-		if canLight == 1:
-			$Particles/LightParticles.show()
-		if canMorph == 0:
-			$Particles/MorphParticles.hide()
-		if canMorph == 1:
-			$Particles/MorphParticles.show()
 			
 		move_and_slide()
 
@@ -251,7 +243,7 @@ func _on_water_detection_2d_water_state_changed(is_in_water):
 		
 func flip_gravity(): #Flips the gravity
 	if (is_on_ceiling() and gravity < 0) or (is_on_floor() and gravity > 0):
-		has_double_jumped = false #MRewritten the doublejump code so you can doublejump while on the ceiling or on the floor
+		jump_counter = 1 #MRewritten the doublejump code so you can doublejump while on the ceiling or on the floor
 	if gravity < 0 and is_on_floor() and (!is_in_water):
 		velocity.y = -jump_velocity * 0.1 #Flips the jump velocity so you jump downwards when on ceiling
 
@@ -284,3 +276,7 @@ func light():
 		$Lighting.show()
 	else:
 		$Lighting.hide()
+
+func pause():
+	if Input.is_action_just_pressed("pause"):
+		can_interact = false
