@@ -53,9 +53,8 @@ func _physics_process(delta):
 		squash_and_stretch()
 		y_direction()
 		light()
-		pause()
+		escape()
 		
-		#should try to make a function for this, but when I did it didn't work.
 		if canDash > 1:
 			canDash = 0
 		if canDoubleJump > 1:
@@ -96,8 +95,9 @@ func _physics_process(delta):
 				elif Input.is_action_pressed("down"):
 					velocity.y = speed * 0.5
 				else:
-					velocity.y = clampf(velocity.y + (gravity * delta * swim_gravity_factor), swim_velocity_cap, swim_velocity_cap)
-		if is_on_floor() and is_in_water: #this means you won't stick to the floor if you are in water. removing the if not is_on_floor does weird things
+					velocity.y = clampf(velocity.y + (gravity * delta * swim_gravity_factor), 
+					swim_velocity_cap, swim_velocity_cap)
+		if is_on_floor() and is_in_water: #this means you won't stick to the floor if you are in water
 			if Input.is_action_pressed("up"):
 					velocity.y = -speed * 0.5
 
@@ -152,8 +152,9 @@ func _physics_process(delta):
 		if (is_on_floor() and gravity > 0) or (is_on_ceiling() and gravity < 0):
 			dashPossible = true
 		
-		if canDash == 0 and canClimb == 0 and canDoubleJump == 0 and canFlip == 0 and canSwim == 0 and canLight == 0 and canMorph == 0:
-			get_tree().change_scene_to_file("res://menus/win_screen.tscn")
+		if canDash == 0 and canClimb == 0 and canDoubleJump == 0 and canFlip == 0:
+			if canSwim == 0 and canLight == 0 and canMorph == 0:
+				get_tree().change_scene_to_file("res://menus/win_screen.tscn")
 		
 			
 		move_and_slide()
@@ -268,6 +269,6 @@ func light():
 	else:
 		$Lighting.hide()
 
-func pause():
-	if Input.is_action_just_pressed("pause"):
-		can_interact = false
+func escape():
+	if Input.is_action_pressed("escape"):
+			get_tree().change_scene_to_file("res://menus/menu.tscn")

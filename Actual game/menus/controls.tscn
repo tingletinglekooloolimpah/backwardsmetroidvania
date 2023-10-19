@@ -32,7 +32,8 @@ Climb = hold d if climbing wall to the right
 			  and a if climbing wall to the left
 Flip = press e when you have flip if you see
 the words flip
-Morph = press w to stretch "
+Morph = press w to stretch 
+Press escape while in the game to return to the main menu"
 
 [node name="EscapeButton" type="Button" parent="."]
 layout_mode = 1

@@ -44,6 +44,7 @@ fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.965812)
 
 [node name="Player" type="CharacterBody2D"]
+modulate = Color(0.52549, 0, 0, 1)
 top_level = true
 scale = Vector2(1.2, 1.2)
 collision_mask = 7
@@ -53,7 +54,7 @@ script = ExtResource("1_34tk8")
 position = Vector2(0.25, -7.15256e-07)
 scale = Vector2(0.0261719, 0.021875)
 sprite_frames = SubResource("SpriteFrames_41p7r")
-animation = &"idle"
+animation = &"stretch"
 autoplay = "idle"
 
 [node name="NormalCollision2D" type="CollisionShape2D" parent="."]
