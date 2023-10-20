@@ -15,7 +15,7 @@ class_name Player
 @export var cayote_counter : int = 0
 var motion = Vector2()
 
-@onready var animated_sprite : AnimatedSprite2D = $AnimatedSprite2D
+@onready var animated_sprite : AnimatedSprite2D = $AnimatedSprite2D #means sprite can be animated
 
 #these control whether the player has the abilities or not
 var canDash = 1
@@ -55,6 +55,7 @@ func _physics_process(delta):
 		light()
 		escape()
 		
+		#this makes the player lose an ability if they already have it
 		if canDash > 1:
 			canDash = 0
 		if canDoubleJump > 1:
@@ -80,7 +81,7 @@ func _physics_process(delta):
 			
 		if (gravity > 0 and (!is_on_floor())) or (gravity < 0 and (!is_on_ceiling())):
 			if cayote_counter > 0:
-				cayote_counter -= 1
+				cayote_counter -= 1#gives player 15 frames for cayote time
 			if jump_buffer_counter > 0 and jump_counter < 1:
 				cayote_counter = 1
 				jump_counter += 1
@@ -97,14 +98,14 @@ func _physics_process(delta):
 				else:
 					velocity.y = clampf(velocity.y + (gravity * delta * swim_gravity_factor), 
 					swim_velocity_cap, swim_velocity_cap)
-		if is_on_floor() and is_in_water: #this means you won't stick to the floor if you are in water
+		if is_on_floor() and is_in_water: #means you won't stick to the floor if you are in water
 			if Input.is_action_pressed("up"):
 					velocity.y = -speed * 0.5
 
 		# Jumping code.
 		if Input.is_action_just_pressed("jump"):
 			jump_buffer_counter = jump_buffer_time
-		if jump_buffer_counter > 0:
+		if jump_buffer_counter > 0: #Jump buffer lets the player jump 15 frames before landing
 			jump_buffer_counter -= 1
 		if jump_buffer_counter > 0 and cayote_counter > 0:
 			#single jump
@@ -154,7 +155,7 @@ func _physics_process(delta):
 		
 		if canDash == 0 and canClimb == 0 and canDoubleJump == 0 and canFlip == 0:
 			if canSwim == 0 and canLight == 0 and canMorph == 0:
-				get_tree().change_scene_to_file("res://menus/win_screen.tscn")
+				get_tree().change_scene_to_file("res://menus/win_screen.tscn")#changes to winscreen
 		
 			
 		move_and_slide()
@@ -171,7 +172,7 @@ func dash():
 		await get_tree().create_timer(1.0).timeout
 		dashing = false
 
-#needed for climbing
+#Climbs walls
 func wall_right():
 	return $Walls/RightWall.is_colliding()
 
@@ -182,7 +183,7 @@ func wall_left():
 #Interaction Methods
 ################################################################################
 
-func _on_interaction_area_area_entered(area):
+func _on_interaction_area_area_entered(area):#Updates the list once the player needs that info
 	all_interactions.insert(0, area)
 	spawn_pos.clear()
 	spawn_pos.insert(0, position.x)
@@ -190,22 +191,22 @@ func _on_interaction_area_area_entered(area):
 	update_interactions()
 
 
-func _on_interaction_area_area_exited(area):
+func _on_interaction_area_area_exited(area):#gets rid of anything in the list once it isn't needed
 	all_interactions.erase(area)
 	update_interactions()
 	
 func update_interactions():
 	if all_interactions:
-		interactLabel.text = all_interactions[0].interact_label
+		interactLabel.text = all_interactions[0].interact_label #changes what text is above player
 	else:
-		interactLabel.text = ""
+		interactLabel.text = "" #makes no text when there is no text to show
 
 		
 func execute_interaction():
 	if all_interactions:
 		var cur_interaction = all_interactions[0]
 		match cur_interaction.interact_type:
-			"dashing" : canDash += 1
+			"dashing" : canDash += 1 #changes whether the player can use these abilities
 			"climbing" : canClimb += 1
 			"swimming" : canSwim += 1
 			"flipping" : canFlip += 1
@@ -213,14 +214,13 @@ func execute_interaction():
 			"morphing" : canMorph += 1
 			"doublejumping" : canDoubleJump += 1
 			"change_gravity" : if canFlip == 1:
-				print(canFlip)
-				gravity *= -1
+				gravity *= -1 #these variables change the gravity
 				jump_velocity *= -1
 				swim_velocity_cap *= -1
 				if (!is_on_ceiling() and (!is_on_floor())):
 					can_interact = true 
 				else:
-					can_interact = true #make death animation so this doesn't seem so jarring
+					can_interact = true 
 				
 
 func swap_boolean(variable):
@@ -232,9 +232,9 @@ func swap_boolean(variable):
 #code for swimming
 func _on_water_detection_2d_water_state_changed(is_in_water):
 	if canSwim == 1:
-		self.is_in_water = is_in_water
+		self.is_in_water = is_in_water #if they are in the water they can swim
 	else:
-		position.x = spawn_pos[0]
+		position.x = spawn_pos[0] #puts the player back to their last interactable component
 		position.y = spawn_pos[1]
 		can_interact = false
 		await get_tree().create_timer(0.8).timeout 
@@ -242,11 +242,11 @@ func _on_water_detection_2d_water_state_changed(is_in_water):
 		
 func flip_gravity(): #Flips the gravity
 	if (is_on_ceiling() and gravity < 0) or (is_on_floor() and gravity > 0):
-		jump_counter = 1 #MRewritten the doublejump code so you can doublejump while on the ceiling or on the floor
+		jump_counter = 1 #Rewritten the code so you can doublejump while on ceiling and floor
 	if gravity < 0 and is_on_floor() and (!is_in_water):
-		velocity.y = -jump_velocity * 0.1 #Flips the jump velocity so you jump downwards when on ceiling
+		velocity.y = -jump_velocity * 0.1 #Flips the jump velocity you jump downwards if on ceiling
 
-func y_direction():
+func y_direction(): #This flips my character sprite when the gravity is flipped
 	if gravity < 0:
 		animated_sprite.flip_v = true
 	elif gravity > 0:
@@ -255,7 +255,7 @@ func y_direction():
 func squash_and_stretch():
 	if (!is_in_water):
 		if Input.is_action_pressed("up") and canMorph == 1:
-			$NormalCollision2D.disabled = true
+			$NormalCollision2D.disabled = true#changes the collision shape for the sprite
 			$StretchCollision2D.disabled = false
 			animated_sprite.play("stretch")
 		else:
@@ -269,6 +269,6 @@ func light():
 	else:
 		$Lighting.hide()
 
-func escape():
+func escape(): #allows player to go back to the menu
 	if Input.is_action_pressed("escape"):
 			get_tree().change_scene_to_file("res://menus/menu.tscn")

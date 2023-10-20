@@ -44,7 +44,7 @@ fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.965812)
 
 [node name="Player" type="CharacterBody2D"]
-modulate = Color(0.52549, 0, 0, 1)
+modulate = Color(0, 0.964706, 0.415686, 1)
 top_level = true
 scale = Vector2(1.2, 1.2)
 collision_mask = 7
@@ -58,24 +58,21 @@ animation = &"stretch"
 autoplay = "idle"
 
 [node name="NormalCollision2D" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2(0.5, 0)
 shape = SubResource("RectangleShape2D_2m2xk")
 
 [node name="StretchCollision2D" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource("RectangleShape2D_r4tjr")
 
 [node name="Walls" type="Node2D" parent="."]
-visible = false
 
 [node name="LeftWall" type="RayCast2D" parent="Walls"]
 rotation = 3.14159
-target_position = Vector2(16, 0)
+target_position = Vector2(13.3333, 3.38024e-05)
 collision_mask = 9
 
 [node name="RightWall" type="RayCast2D" parent="Walls"]
-target_position = Vector2(16, 0)
+target_position = Vector2(13.3333, 0)
 collision_mask = 9
 
 [node name="Interaction Components" type="Node2D" parent="."]
